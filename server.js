@@ -76,8 +76,8 @@ router.post('/signup', function(req, res) {
             user.name = req.body.name;
             user.username = req.body.username;
             user.password = req.body.password;
-            //res.json({success: true, msg: 'got to set values'});
-            // save the user
+
+            // save
             user.save(function(err) {
                       if (err) {
                       // duplicate entry
@@ -118,17 +118,17 @@ router.post('/signin', function(req, res) {
 //===============================================================================================
 // /movies route
 router.route('/movies')
-//get all movies
+// get all movies
 .get(authJwtController.isAuthenticated, function (req, res) {
      Movie.find(function (err, movies) {
-                //if error, send error
+                
                 if (err) res.send(err);
                 
-                //return movies
+                // return movies
                 res.json(movies);
                 });
      })
-//create a new movie
+// create a new movie
 .post(authJwtController.isAuthenticated, function (req, res) {
       if (!req.body.title) {
         res.json({ success: false, message: 'You have entered the movie information incorrectly. You where missing the title.' });
@@ -144,19 +144,19 @@ router.route('/movies')
       res.json({ success: false, message: 'Please add at atleast three actors to the movie.' })
       }
       else {
-      //create new movie object
+
       var movie = new Movie();
       
-      //add req object info to movie object
+      // set inputs to movie data
       movie.title = req.body.title;
       movie.year = req.body.year;
       movie.genre = req.body.genre;
       movie.actors = req.body.actors;
       
-      //save the movie object
+      // save
       movie.save(function(err) {
                  if (err) {
-                 //duplicate entry
+                 //d uplicate entry
                  if (err.code === 11000)
                  return res.json({ success: false, message: req.body.title + ' already exists in the database!' });
                  else
@@ -166,7 +166,7 @@ router.route('/movies')
                  });
       }
       })
-//update a movie
+// update a movie
 .put(authJwtController.isAuthenticated, function (req, res) {
      Movie.findById(req.body._id,function (err, movie) {
                     if (err) {
@@ -205,7 +205,7 @@ router.route('/movies')
                     }
                     });
      })
-//delete a movie
+// delete a movie
 .delete(authJwtController.isAuthenticated, function (req, res) {
         Movie.findByIdAndRemove(req.body._id,function (err, movie) {
             if (err) res.send(err);
